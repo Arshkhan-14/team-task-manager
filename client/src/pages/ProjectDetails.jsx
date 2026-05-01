@@ -208,7 +208,7 @@ export default function ProjectDetails() {
                         {task.submissions && task.submissions.length > 0 && (
                           <div className={styles.submissionList}>
                             {task.submissions.map((sub, i) => (
-                              <a key={i} href={`${sub.fileUrl}`} target="_blank" rel="noreferrer" className={styles.submissionLink}>
+                              <a key={i} href={`${import.meta.env.VITE_API_URL || ''}${sub.fileUrl}`} target="_blank" rel="noreferrer" className={styles.submissionLink}>
                                 <Download size={14} /> {sub.fileName}
                               </a>
                             ))}

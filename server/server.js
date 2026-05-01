@@ -21,10 +21,9 @@ app.use("/api/projects", projectRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/users", userRoutes);
 
-// Serve frontend
-app.use(express.static(path.join(__dirname, "../client/dist")));
-app.use((req, res) => {
-  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+// Basic route for API
+app.get("/", (req, res) => {
+  res.send("Task Manager API is running...");
 });
 
 const PORT = process.env.PORT || 5000;
