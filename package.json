@@ -7,6 +7,6 @@
     "install:client": "cd client && npm install",
     "postinstall": "npm run install:server && npm run install:client",
     "build": "cd client && npm run build",
-    "start": "node server/server.js"
+    "start": "node server.js"
   }
 }
