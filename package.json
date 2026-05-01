@@ -1,0 +1,12 @@
+{
+  "name": "team-task-manager",
+  "version": "1.0.0",
+  "description": "MERN Stack deployment for Railway",
+  "scripts": {
+    "install:server": "cd server && npm install",
+    "install:client": "cd client && npm install",
+    "postinstall": "npm run install:server && npm run install:client",
+    "build": "cd client && npm run build",
+    "start": "cd server && npm start"
+  }
+}
