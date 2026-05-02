@@ -4,12 +4,19 @@ const path = require("path");
 const Task = require("../models/Task");
 const { protect, authorize } = require("../middleware/auth");
 
+const fs = require("fs");
+
 const router = express.Router();
+
+const uploadDir = path.join(__dirname, "..", "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 // Setup Multer for file uploads
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    cb(null, "uploads/");
+    cb(null, uploadDir);
   },
   filename(req, file, cb) {
     cb(null, `${Date.now()}-${file.originalname}`);
@@ -58,7 +65,7 @@ router.put("/:id", protect, async (req, res) => {
     if (!task) return res.status(404).json({ message: "Task not found" });
 
     // Ensure member is the assignee
-    if (req.user.role === "MEMBER" && task.assigneeId.toString() !== req.user.id) {
+    if (req.user.role === "MEMBER" && (!task.assigneeId || task.assigneeId.toString() !== req.user.id)) {
       return res.status(403).json({ message: "Not authorized to update this task" });
     }
 
@@ -109,7 +116,7 @@ router.post("/:id/submit", protect, upload.single("file"), async (req, res) => {
     if (!task) return res.status(404).json({ message: "Task not found" });
 
     // Ensure member is the assignee
-    if (req.user.role === "MEMBER" && task.assigneeId.toString() !== req.user.id) {
+    if (req.user.role === "MEMBER" && (!task.assigneeId || task.assigneeId.toString() !== req.user.id)) {
       return res.status(403).json({ message: "Not authorized to submit to this task" });
     }
 
