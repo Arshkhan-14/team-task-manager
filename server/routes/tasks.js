@@ -62,18 +62,25 @@ router.put("/:id", protect, async (req, res) => {
       return res.status(403).json({ message: "Not authorized to update this task" });
     }
 
-    const { status, title, description, dueDate, assigneeId, priority, tags } = req.body;
+    const { status, title, description, dueDate, assigneeId, priority, tags, resultText, isVerified } = req.body;
     
-    // Only Admin can change details other than status
+    // Only Admin can change details other than status and resultText
     if (req.user.role === "ADMIN") {
-      task.title = title || task.title;
-      task.description = description || task.description;
-      task.dueDate = dueDate || task.dueDate;
-      task.assigneeId = assigneeId || task.assigneeId;
-      task.priority = priority || task.priority;
-      task.tags = tags || task.tags;
+      if (title) task.title = title;
+      if (description) task.description = description;
+      if (dueDate) task.dueDate = dueDate;
+      if (assigneeId) task.assigneeId = assigneeId;
+      if (priority) task.priority = priority;
+      if (tags) task.tags = tags;
+      if (isVerified !== undefined) task.isVerified = isVerified;
     }
-    task.status = status || task.status;
+    
+    if (resultText !== undefined) {
+      task.resultText = resultText;
+    }
+    if (status) {
+      task.status = status;
+    }
 
     await task.save();
     res.json(task);

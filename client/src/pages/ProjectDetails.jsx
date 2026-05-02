@@ -81,6 +81,31 @@ export default function ProjectDetails() {
     }
   };
 
+  const handleSubmitResult = async (taskId, currentResult) => {
+    const newResult = window.prompt("Enter your result (text or link):", currentResult || "");
+    if (newResult !== null) {
+      try {
+        await axios.put(`/api/tasks/${taskId}`, { resultText: newResult }, {
+          headers: { Authorization: `Bearer ${user.token}` }
+        });
+        fetchProjectDetails();
+      } catch (error) {
+        console.error("Failed to submit result");
+      }
+    }
+  };
+
+  const handleVerify = async (taskId, isVerified) => {
+    try {
+      await axios.put(`/api/tasks/${taskId}`, { isVerified }, {
+        headers: { Authorization: `Bearer ${user.token}` }
+      });
+      fetchProjectDetails();
+    } catch (error) {
+      console.error("Failed to verify task");
+    }
+  };
+
   const deleteTask = async (taskId) => {
     if (!window.confirm("Delete this task?")) return;
     try {
@@ -189,6 +214,28 @@ export default function ProjectDetails() {
                       </div>
 
                       {task.description && <p className={styles.taskDesc}>{task.description}</p>}
+                      
+                      <div style={{ marginTop: '0.75rem', padding: '0.75rem', background: 'var(--bg-primary)', borderRadius: '8px', fontSize: '0.85rem', border: '1px solid var(--border-color)' }}>
+                        {task.resultText && (
+                          <div style={{ marginBottom: '0.5rem', wordBreak: 'break-word' }}>
+                            <strong>Result: </strong> {task.resultText}
+                          </div>
+                        )}
+                        
+                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                          {task.isVerified && <span style={{ color: 'var(--success-color)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>✓ Verified</span>}
+                          
+                          {!task.isVerified && user.role === "ADMIN" && task.resultText && (
+                            <button onClick={() => handleVerify(task._id, true)} style={{ padding: '0.3rem 0.6rem', background: 'var(--success-color)', color: 'white', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 'bold' }}>Verify Result</button>
+                          )}
+                          
+                          {(user.role === "ADMIN" || task.assigneeId?._id === user._id) && !task.isVerified && (
+                            <button onClick={() => handleSubmitResult(task._id, task.resultText)} style={{ padding: '0.3rem 0.6rem', background: 'var(--accent-color)', color: 'white', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 'bold' }}>
+                              {task.resultText ? "Edit Result" : "Submit Result"}
+                            </button>
+                          )}
+                        </div>
+                      </div>
                       
                       <div className={styles.taskFooter}>
                         <select 

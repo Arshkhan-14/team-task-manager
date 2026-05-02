@@ -18,6 +18,8 @@ const taskSchema = new mongoose.Schema(
     dueDate: { type: Date },
     projectId: { type: mongoose.Schema.Types.ObjectId, ref: "Project", required: true },
     assigneeId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    resultText: { type: String },
+    isVerified: { type: Boolean, default: false },
     submissions: [
       {
         fileName: String,
