@@ -3,7 +3,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-// Placeholders for pages
+import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
@@ -16,7 +16,7 @@ function App() {
       <AuthProvider>
         <Router>
           <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           
