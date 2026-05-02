@@ -53,8 +53,12 @@ export default function ProjectDetails() {
       const payload = { 
         ...newTask, 
         projectId: id,
-        tags: newTask.tags.split(',').map(tag => tag.trim()).filter(tag => tag)
+        tags: newTask.tags ? newTask.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : []
       };
+      
+      if (!payload.assigneeId) delete payload.assigneeId;
+      if (!payload.dueDate) delete payload.dueDate;
+
       await axios.post("/api/tasks", payload, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
